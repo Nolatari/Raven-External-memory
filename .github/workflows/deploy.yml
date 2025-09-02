@@ -1,1 +1,19 @@
+name: Deploy Memory Vault
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"   # Every 15min for redundancy
 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Timestamp Build
+        run: date -u +%FT%TZ > latest/build_ts.txt
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - uses: actions/deploy-pages@v4
